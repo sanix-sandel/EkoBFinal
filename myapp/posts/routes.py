@@ -25,7 +25,7 @@ def new_post():
         title=title.capitalize()
         genre=form.genre.data
         
-        flash('Your Post need a content!', 'succes')
+        flash('Your Post need a content!', 'success')
         return redirect(url_for('posts.Newpost', title=title, category=genre.title))   
     return render_template('create_post.html', form=form, title='New Post', legend='New post')
 
@@ -39,7 +39,7 @@ def Newpost(title, category):
     tags=Tag.query.all()
     
     if request.method=='POST':
-        content=request.form.get('postcontent')
+        content=request.form.get('summernote')
         if content=="":
             flash('The post must have a content', 'danger')
             return redirect(url_for('main.home'))
@@ -102,13 +102,14 @@ def post(post_id):
         .order_by(Comment.date_posted.desc())\
         .all()
     rposts=Post.query.filter(Post.id != post.id ).filter_by(category=post.category).limit(5).all()
+    tags=Tag.query.all()
     if request.method=="POST":
         content=request.form.get('comment')
         
         if len(content) > 0:
             return commenter(content, post.id) 
 
-    return render_template('post.html', title=post.title, post=post, rposts=rposts, comments=comments)
+    return render_template('Post.html', title=post.title, post=post, rposts=rposts, tags=tags, comments=comments)
                                                   
 
 @posts.route("/post/<int:post_id>/comment", methods=['GET', 'POST'])
@@ -148,7 +149,7 @@ def reply(comment_id, post_id):
     return redirect (url_for('main.home'))
 
 
-@posts.route("/post/<int:post_id>/delete", methods=['POST'])
+@posts.route("/post/<int:post_id>/delete", methods=['POST', 'GET'])
 @login_required
 def delete_post(post_id):
     post = Post.query.get_or_404(post_id)
@@ -227,9 +228,10 @@ def like_action(post_id, action):
 @posts.route('/home/post/<int:tag_id>/')
 def tag_posts(tag_id):
     tag=Tag.query.filter_by(id=tag_id).first_or_404()
+    tags=Tag.query.all()
     page = request.args.get('page', 1, type=int)
     posts=tag.posts.order_by(Post.date_posted.desc()).paginate(page=page, per_page=5)
-    return render_template('tag_posts.html', posts=posts)
+    return render_template('tag_posts.html', posts=posts, tags=tags)
 
 
 @posts.route('/home/<string:category>')

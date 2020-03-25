@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8"/>
+        <meta name=viwpoint content="width=device-width, initial scale=1.0"/>
+        <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+        <title>EkoB</title>
+
+         <!--Bootstrap CDN-->
+        <link 
+        rel="stylesheet" 
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" 
+        crossorigin="anonymous"/>
+
+      <!--<link rel="icon" type="image/png" href="static/LgBrowser.png" />-->
+        <link rel="shortcut icon" href="{{ url_for('static', filename='LgBrowser.ico') }}">  
+
+    <!--Font awesome-->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <!--Slick Slider-->
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+
+    <!--stylesheet-->
+        <link rel="stylesheet" href="{{url_for('static', filename='Main.css')}}"/>
+
+        {% if title %}
+          <em><title>EkoB - {{ title }}</title></em>
+        {% else %}
+          <em><title>EkoB</title></em>
+        {% endif %}
+
+      
+      <style>
+        img {
+            max-width: 100%;
+            max-height: 100%;
+          }
+      </style>    
+    </head>
+
+
+    <body>
+        <header>
+          
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4 col-sm-12 col-12">
+                        <div class="btn-group">
+                            <button class="btn border dropdown-toggle my-md-4 my-2"
+                                data-toggle="dropdown" 
+                                aria-haspopup="true">Button
+                            </button>
+                            <div class="dropdown-menu">
+                                <a href="#" class="dropdown-item">Euro</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    
+                    <div class="col-md-4 col-sm-12 col-12 text-right">
+                        <p class="my-md-4 header-links">
+                            <a href="{{url_for('users.account')}}" class="px-2"><i title="Sign In" class="fa fa-sign-in"></i></a>
+                            <a href="{{ url_for('users.register') }}" class="px-2"><i title="Sign Up" class="fa fa-user-plus"></i></a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="container p-0">
+              
+                <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+                    <a class="navbar-brand" href="#">
+                      
+                    </a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                      <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                      <ul class="navbar-nav">
+                        <li class="nav-item active">
+                    
+                          
+                          <a class="navbar-brand mr-4" href="/"><img class="logo" src="{{url_for('static', filename='logopage.png')}}"></b></a>
+                        </li>
+                       
+                        <li class="nav-item">
+                          <a class="nav-link" href="{{url_for('main.about')}}">About us</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Docs
+                          </a>
+                          
+                          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item" href="{{url_for('files.allfiles')}}">Download eBooks</a>
+                            <a class="dropdown-item" href="{{url_for('files.upload')}}">Upload eBook`</a>
+                            <a class="dropdown-item" href="{{url_for('files.recommend')}}">Recommend an Ebook</a>
+                            <a class="dropdown-item" href="{{url_for('files.ebooks')}}">Ebooks Recommended</a>
+
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                    {% if current_user.is_authenticated %}
+                      <div class="navbar-nav">
+                        <li class="nav-item rounded-circle mx-2 searh-icon">
+                            <a href="{{url_for('users.account')}}"><i title="Your account" class="fa fa-user-circle"></i></a>
+                        </li>
+                        <li class="nav-item rounded-circle mx-2 searh-icon">
+                          <a href="{{ url_for('posts.new_post') }}"><i title="New post" class="fa fa-paper-plane-o"></i></a>
+                        </li>
+                        <li class="nav-item rounded-circle mx-2" title="Logout" >
+                          <a href="{{url_for('users.logout')}}"><i class="fa fa-power-off"></i></a>
+                        </li>  
+                      </div>
+                    {% else %}
+                      <div class="navbar-nav">
+                        <li class="nav-item rounded-circle mx-2 searh-icon">
+                            <a href="{{ url_for('users.login') }}"><i title="Sign In" class="fa fa-sign-in"></i></a>
+                        </li>
+                        <li class="nav-item rounded-circle mx-2 searh-icon">
+                          <a href="{{ url_for('users.register') }}"><i title="Sign Up" class="fa fa-user-plus"></i></a>
+                        </li>
+                      </div>
+                    {% endif %}  
+                </nav>
+               
+            </div>
+            <nav class="navbar navbar-light bg-white">
+                <a href="{{url_for('main.home')}}" class="navbar-brand">EkoB</a>
+                <form class="form-inline" method='POST' action="{{url_for('main.search_results')}}">
+                    <div class="input-group">
+                        <input type="text" name="searched" class="form-control" aria-label="Recipient's username" aria-describedby="button-addon2">
+                        <div class="input-group-append">
+                          <a href="{{url_for('main.search_results')}}">
+                            <button class="btn btn-outline-primary" type="submit" id="button-addon2">
+                              <i class="fa fa-search"></i>
+                          </a>      
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </nav>
+        </header>
+        <main>
+            <div class="container-fluid gedf-wrapper">
+              {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                  {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                      {{ message }}
+                    </div>
+                  {% endfor %}
+                {% endif %}
+              {% endwith %}
+              <div class="row">
+                {% block content %}{% endblock %}
+              </div>
+              
+            </div>
+           
+        
+        
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" 
+            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" 
+            crossorigin="anonymous">
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" 
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" 
+            crossorigin="anonymous">
+        </script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+            crossorigin="anonymous">
+        </script>
+        <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+	    <script src="main.js"></script>			
+
+
+    </body>
+
+    <footer class="footer">
+        <div class="container bottom_border">
+        <div class="row">
+        <div class=" col-sm-4 col-md col-sm-4  col-12 col">
+        <a class="navbar-brand mr-4" href="/"><img class="logo" src="{{url_for('static', filename='logopage.png')}}"></b></a>
+        <h5 class="headin5_amrc col_white_amrc pt2">Find us</h5>
+        <!--headin5_amrc-->
+        <p class="mb10">Lorem Ipsum is simpl</p>
+        <p><i class="fa fa-location-arrow"></i> 9878/25 sec 9 rohini 35 </p>
+        <p><i class="fa fa-phone"></i>  +91-9999878398  </p>
+        <p><i class="fa fa fa-envelope"></i> techyintelo@gmail.com  </p>
+        
+        
+        </div>
+        
+        
+        <div class=" col-sm-4 col-md  col-6 col">
+        <h5 class="headin5_amrc col_white_amrc pt2">Quick links</h5>
+        <!--headin5_amrc-->
+        <ul class="footer_ul_amrc">
+        <li><a href="http://webenlance.com">Image Rectoucing</a></li>
+        <li><a href="http://webenlance.com">Clipping Path</a></li>
+        <li><a href="http://webenlance.com">Hollow Man Montage</a></li>
+        
+        </ul>
+        <!--footer_ul_amrc ends here-->
+        </div>
+        
+        
+        <div class=" col-sm-4 col-md  col-6 col">
+        <h5 class="headin5_amrc col_white_amrc pt2">Quick links</h5>
+        <!--headin5_amrc-->
+        <ul class="footer_ul_amrc">
+        <li><a href="http://webenlance.com">Remove Background</a></li>
+        <li><a href="http://webenlance.com">Shadows & Mirror Reflection</a></li>
+        <li><a href="http://webenlance.com">Logo Design</a></li>
+       
+        </ul>
+        <!--footer_ul_amrc ends here-->
+        </div>
+        
+        
+        <div class=" col-sm-4 col-md  col-12 col">
+        <h5 class="headin5_amrc col_white_amrc pt2">Follow us</h5>
+        <!--headin5_amrc ends here-->
+        
+        <ul class="footer_ul2_amrc">
+        <li><a href="#"><i class="fa fa-twitter fleft padding-right"></i> </a><p>Lorem Ipsum is simply dummy text of the printing...<a href="#">https://www.lipsum.com/</a></p></li>
+        
+        </ul>
+        <!--footer_ul2_amrc ends here-->
+        </div>
+        </div>
+        </div>
+        
+        
+        <div class="container">
+        <ul class="foote_bottom_ul_amrc">
+        <li><a href="{{url_for('main.home')}}">Home</a></li>
+        <li><a href="{{url_for('main.about')}}">About</a></li>
+        <li><a href="http://webenlance.com">Services</a></li>
+        <li><a href="http://webenlance.com">Pricing</a></li>
+        <li><a href="http://webenlance.com">Blog</a></li>
+        <li><a href="http://webenlance.com">Contact</a></li>
+        </ul>
+        <!--foote_bottom_ul_amrc ends here-->
+        <p class="text-center">Copyright @2020 | Designed With by <a href="#">TechyBTeam</a></p>
+        
+        <ul class="social_footer_ul">
+          <li><a href="http://webenlance.com"><i class="fa fa-facebook-f"></i></a></li>
+          <li><a href="http://webenlance.com"><i class="fa fa-twitter"></i></a></li>
+          <li><a href="http://webenlance.com"><i class="fa fa-linkedin"></i></a></li>
+          <li><a href="http://webenlance.com"><i class="fa fa-instagram"></i></a></li>
+          <li><a href="http://webenlance.com"><i class="fa fa-telegram"></i></a></li>
+        </ul>
+        <!--social_footer_ul ends here-->
+        </div>
+        
+    </footer>
+   
+
+
+</html>

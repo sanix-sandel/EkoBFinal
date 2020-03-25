@@ -17,7 +17,7 @@ def register():
     form=RegistrationForm()
     if form.validate_on_submit():#si il valide son enregistrement, ses donnnées sont envoyées à la DB
         hashed_password=bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        user=User(username=form.username.data, email=form.email.data, password=hashed_password, admin=False, publisher=False )
+        user=User(username=form.username.data, email=form.email.data, password=hashed_password, admin=True, confirmed=True, publisher=False )
         db.session.add(user)
         db.session.commit()
         token=user.generate_confirmation_token()
@@ -78,7 +78,7 @@ def account():
         form.email.data = current_user.email
         form.location.data=current_user.location #ici
     image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
-    return render_template('account.html', title='Account',
+    return render_template('Account.html', title='Account',
                            image_file=image_file, form=form)
 
 

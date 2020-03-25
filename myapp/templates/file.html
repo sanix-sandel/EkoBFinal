@@ -1,33 +1,46 @@
-{% extends "layout.html" %}
+{% extends "Layout.html" %}
 {% block content%}
 {{ share.load() }}
 
-<article class="media content-section">
-    <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + file.uploader.image_file) }}">
-    <div class="media-body">
-      <div class="article-metadata">
-        <a class="mr-2" >{{ file.uploader.username }}</a>
-        <small class="text-muted">{{ file.date_posted.strftime('%Y-%m-%d') }}</small>
-        <small class="text-muted">{{ file.uploader.location }}</small>
-        
-      </div>
-        <h2 class="article-title">{{ file.title | safe }}</h2>
-        <h8>{{file.auteur}}</h8>
-        <div class="imagecover">
-          <img class="cover" src="{{url_for('files.serve_image', img_id=file.img_id)}}">
-        </div>
-        <p class="article-content">{{ file.description | safe }}</p>
-        
+  <div class="container bootstrap snippet">
+    <div class="row">
+  		<div class="col-sm-10"><h1>{{file.title | safe }}</h1></div>
+    	
     </div>
-    
-</article>
-  
-  <a href="{{url_for('files.download', file_id=file_id)}}">
-   <button class="btn"><i class="fa fa-download"></i> Download {{ file_size }} MB </button>
-  </a>
-  
+    <div class="row">
+  		<div class="col-sm-3"><!--left col-->
+              
 
+      <div class="text-center">
+        <img class="" src="{{url_for('files.serve_image', img_id=file.img_id)}}" class="avatar img-circle img-thumbnail" alt="avatar">
+        
+      </div></hr><br>
 
-  {{ share.create(title='Share with: ') }}  
+               
+          <div class="panel panel-default">
+            <div class="panel-heading">{{file.auteur}}</div>
+            
+          </div>
+          
+         
+          
+        </div><!--/col-3-->
+    	<div class="col-sm-9">
+              
+          <div class="tab-content">
+            <div class="tab-pane active" id="home">
+                
+              <p class="article-content">{{ file.description | safe }}</p>
+              <a href="#" class="btn btn-primary fa fa-download"  style="width: 8rem; height:3rem;">
+                Download {{ file_size }} MB 
+              </a>
+                {{ share.create(title='Share via: ') }}  
+
+                </div><!--/tab-pane-->
+             <div class="tab-pane" id="messages">
+            </div>  
+        </div>                             
+    </div>
+</div>    
 
 {% endblock content %}

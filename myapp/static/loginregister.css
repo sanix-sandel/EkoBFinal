@@ -15,17 +15,17 @@ body {
   
   
 .bg-steel {
-  background-color:#414141;
-  font-family: 'Times New Roman', Times, serif
+  background-color:white;
+  font-family: sans-serif;
 }
 
   
   .site-header .navbar-nav .nav-link {
-    color: #00F9A9;
+    color: #428bca;
   }
   
   .site-header .navbar-nav .nav-link:hover {
-    color: white;
+    color: black;
   }
   
   .site-header .navbar-nav .nav-link.active {

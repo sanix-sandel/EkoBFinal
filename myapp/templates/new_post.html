@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!--<!DOCTYPE html>
 
 <html lang="en">
 
@@ -21,33 +21,7 @@
         
         <textarea id="summernote" name="postcontent"></textarea>
 
-<!--
-        <article class="media content-section">
-  
-          <div class="media-body">
-            <div class="article-metadata">
-              <h5 class="mr-2" >Tags</h5>
-              <small class="text-muted">Select tags related to your post</small>
-              <small class="text-muted">By one click</small>
-              
 
-              
-                {% for tag in tags -%}
-                  <a href="#"><span class="badge badge-primary">{{ tag.title }}</span></a>
-                {% endfor %}
-              </div>
-              <div class="form-group">
-                <label>Add Tags:</label><br/>
-                <input type="text" name="tags" placeholder="Tags" class="tm-input form-control tm-input-info"/>
-              </div>
-              
-              <div class="form-group">
-                <button class="btn btn-success">Submit</button>
-              </div>
-            
-            </div>
-        </article> 
--->
         
         
         <input type="submit" value="post">
@@ -70,3 +44,39 @@
 </body>
 
 </html>
+-->
+
+{% extends "Layout.html" %}
+{% block content %}
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+  <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.16/dist/summernote-bs4.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.16/dist/summernote-bs4.min.js"></script>
+  <div class="col-md-12">
+    <form method='POST'>
+
+      <!--<div class="ol-md-8 gedf-main" id="summernote" name="summernote">
+      
+      </div>-->
+      <textarea id="summernote" name="summernote"></textarea>
+      <input type="submit" class="btn btn-primary"  value="post">
+  
+      
+      <!--<div class="btn-group">
+        <button type="submit" class="btn btn-primary ">Cancel</button>
+      </div>-->
+    </form>  
+  </div>  
+  
+    <script>
+      $('#summernote').summernote({
+      placeholder: 'What do you think ? ',
+      tabsize: 2,
+      height: 200,
+      width:1200
+      });
+    </script>
+
+{% endblock %}

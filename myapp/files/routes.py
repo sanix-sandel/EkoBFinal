@@ -34,7 +34,8 @@ def allfiles():
     page = request.args.get('page', 1, type=int)
     files = File.query.order_by(File.date_posted.desc()).paginate(page=page, per_page=12)
     genres=Genre.query.all()
-    return render_template('files.html', files=files, genres=genres)
+    flash('More than '+str(files.total)+' for free downloads', 'success')
+    return render_template('Files.html', files=files, genres=genres)
 
 
 @files.route('/img/<int:img_id>', methods=['GET', 'POST'])
@@ -49,7 +50,9 @@ def serve_image(img_id):
 def upload():
     form=FileForm()      
     #if form.is_submitted():
-        
+    if not current_user.is_authenticated:
+        flash('Reister or Login first', 'danger')
+        return redirect(url_for('users.login'))    
     if form.validate_on_submit():
         flash('Your file has been successfully uploaded !', 'succes')        
         form.filedata.data.seek(0, os.SEEK_END)
@@ -67,7 +70,7 @@ def upload():
         db.session.add(newFile)
         db.session.commit()
               
-    return render_template("fileupload.html", form=form)
+    return render_template("File_upload.html", form=form)
 
 
 
@@ -98,7 +101,7 @@ def uploadv(recommender_id, ebook_id):
         send_mail(recommender.email,'Recommended Ebook uploaded', 'ebookuploaded', username=recommender.username, title=newFile.title)
         return redirect(url_for('files.allfiles')) 
               
-    return render_template("fileupload2.html", form=form, title=ebook.title.capitalize())
+    return render_template("File_upload2.html", form=form, title=ebook.title.capitalize())
 
 
 @login_required
@@ -129,7 +132,7 @@ def recommend():
         db.session.commit()
         send_mail(current_user.email,'Recommendation of an Ebook', 'ebookrecommendation', username=current_user.username, title=ebook.title)
         return redirect(url_for('main.home'))  
-    return render_template('recommend.html', form=form)
+    return render_template('Recommend.html', form=form)
 
 
 @login_required

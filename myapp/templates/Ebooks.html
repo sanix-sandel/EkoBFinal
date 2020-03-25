@@ -1,25 +1,55 @@
-{% extends "layout.html" %}
+{% extends "Layout.html" %}
 {% block content %}
-    {% for ebook in ebooks.items %}
-        <article class="media content-section">
-         
-          <div class="media-body">
-            <h2>{{ ebook.title }}</h2>
-            <p class="article-content">{{ ebook.author|safe}} </p>
-            <a href="{{url_for('files.uploadv', recommender_id=ebook.recommender.id, ebook_id=ebook.id)}}"><button class="btn"> Upload </button></a>
+
+<div class="col-md-12"><!--md-3-->
+  <div class="card">
+      <div class="card-body">
+          <div class="h5">Categories</div>
+          
+          <div class="h7">
+              {% for genre in genres -%}
+                  <a href="{{url_for('files.files_bygenre', category=genre.title)}}">
+                      <span class="badge badge-primary">
+                          {{genre.title}}
+                      </span>
+                  </a>
+              {% endfor %}
           </div>
-        </article>
-    {% endfor %}
+          
+      </div>
+    
+  </div>
+</div>
+
+<div class="col-m-12">
+  <div class="row">
+  {% for ebook in ebooks.items %}
+      <div class="card" style="width: 10rem; height:14rem;">
+          
+          <div class="card-body">
+              <h7 class="h7 text-muted">{{ebook.author}}</h7>
+              <p>{{ebook.title}}</p>
+             
+          </div>
+         <a href="{{url_for('files.uploadv', recommender_id=ebook.recommender.id, ebook_id=ebook.id)}}" class="btn btn-primary"  style="width: 8rem; height:2rem;">Upload</a>
+      </div>
+  {% endfor %}
+  </div>
+</div> 
+
+<div class="col-md-12">
+    <div>
     {% for page_num in ebooks.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
-      {% if page_num %}
-        {% if ebooks.page == page_num %}
-          <a class="btn btn-info mb-4" href="{{ url_for('files.ebooks', page=page_num) }}">{{ page_num }}</a>
+        {% if page_num %}
+          {% if ebooks.page == page_num %}
+              <a class="btn btn-info mb-4" href="{{ url_for('files.ebooks', page=page_num) }}">{{ page_num }}</a>
+          {% else %}
+              <a class="btn btn-outline-info mb-4" href="{{ url_for('files.ebooks', page=page_num) }}">{{ page_num }}</a>
+          {% endif %}
         {% else %}
-          <a class="btn btn-outline-info mb-4" href="{{ url_for('files.ebooks', page=page_num) }}">{{ page_num }}</a>
+          ...
         {% endif %}
-      {% else %}
-        ...
-      {% endif %}
     {% endfor %}
-  
+    </div>
+</div>  
 {% endblock content %}

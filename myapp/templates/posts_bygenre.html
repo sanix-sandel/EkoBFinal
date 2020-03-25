@@ -1,99 +1,176 @@
-{% extends "layout.html" %}
-
- 
+{% extends "Layout.html" %}
  
 {% block content %}
 
-     
-<form method="POST" action="">
-  {{ form.hidden_tag() }}
-  <fieldset class="form-group">
-      
-      <div class="form-group">
-          
-          {% if form.search.errors %}
-              {{ form.search(class="form-control form-control-lg is-invalid") }}
-              <div class="invalid-feedback">
-                  {% for error in form.search.errors %}
-                      <span>{{ error }}</span>
+<div class="col-md-8 gedf-main"><!--md-6-->
+  <form class="form-inline" method='POST'>
+      <div class="input-group">
+          <input type="text" name="searched" class="form-control" aria-label="Recipient's username" aria-describedby="button-addon2">
+          <div class="input-group-append">
+              <button class="btn btn-outline-primary" type="submit" id="button-addon2">
+                <a href="{{url_for('main.search_results')}}"><i class="fa fa-search"></i></a>
+                  
+              </button>
+          </div>
+      </div>
+  </form>
+
+  <!--- \\\\\\\Post-->
+  <div class="card gedf-card">
+      <div class="card-header">
+          <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
+              <li class="nav-item">
+                  <a class="nav-link active" id="posts-tab" data-toggle="tab" href="#posts" role="tab" aria-controls="posts" aria-selected="true">Make
+                      a publication</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" id="images-tab" data-toggle="tab" role="tab" aria-controls="images" aria-selected="false" href="#images">Images</a>
+              </li>
+          </ul>
+      </div>
+      <div class="card-body">
+          <div class="tab-content" id="myTabContent">
+              <div class="tab-pane fade show active" id="posts" role="tabpanel" aria-labelledby="posts-tab">
+                  <div class="form-group">
+                      <label class="sr-only" for="message">post</label>
+                      <textarea class="form-control" id="message" rows="3" placeholder="What are you thinking?"></textarea>
+                  </div>
+
+              </div>
+              <div class="tab-pane fade" id="images" role="tabpanel" aria-labelledby="images-tab">
+                  <div class="form-group">
+                      <div class="custom-file">
+                          <input type="file" class="custom-file-input" id="customFile">
+                          <label class="custom-file-label" for="customFile">Upload image</label>
+                      </div>
+                  </div>
+                  <div class="py-4"></div>
+              </div>
+          </div>
+          <div class="btn-toolbar justify-content-between">
+              <div class="btn-group">
+                  <button type="submit" class="btn btn-primary">share</button>
+              </div>
+              <div class="btn-group">
+                  <button id="btnGroupDrop1" type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                      aria-expanded="false">
+                      <i class="fa fa-globe"></i>
+                  </button>
+                  <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btnGroupDrop1">
+                      <a class="dropdown-item" href="#"><i class="fa fa-globe"></i> Public</a>
+                      <a class="dropdown-item" href="#"><i class="fa fa-users"></i> Friends</a>
+                      <a class="dropdown-item" href="#"><i class="fa fa-user"></i> Just me</a>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+  <!-- Post /////-->
+
+
+  <!--- \\\\\\\Post-->
+  {% for post in posts.items %}
+      <div class="card gedf-card">
+          <div class="card-header">
+              <div class="d-flex justify-content-between align-items-center">
+                  <div class="d-flex justify-content-between align-items-center">
+                      <div class="mr-2">
+                          <img class="rounded-circle" width="45" src="{{url_for('static', filename='profile_pics/' + post.author.image_file)}}" >
+                      </div>
+                      <div class="ml-2">
+                          <div class="h5 m-0">{{ post.author.username }}</div>
+                          <div class="h7 text-muted">{{post.author.location}}</div>
+                      </div>
+                  </div>
+                  <div>
+                    {% if current_user == post.author %}
+                        <div class="dropdown">
+                            <button class="btn btn-link dropdown-toggle" type="button" id="gedf-drop1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-ellipsis-h"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="gedf-drop1">
+                        
+                                <a class="dropdown-item" href="{{ url_for('posts.update_post', post_id=post.id) }}">Update</a>
+                                <a class="dropdown-item" href="{{ url_for('posts.delete_post', post_id=post.id) }}">Delete</a>
+                       
+                            </div>
+                        </div>
+                {% endif %}
+                  </div>
+              </div>
+
+          </div>
+          <div class="card-body">
+              <div class="text-muted h7 mb-2"> <i class="fa fa-clock-o"></i> {{post.date_posted.strftime('%Y-%m-%d')}}</div>
+              <a class="card-link" href="{{ url_for('posts.post', post_id=post.id) }}">
+                  <h2 class="card-title">{{post.title}} </h2>
+              </a>
+
+              <p class="card-text">
+                  {{ post.content[:120]| safe }}
+              </p>
+              <div>
+                  {% for tags in post.tags -%}
+                      <a href="{{ url_for('posts.tag_posts', tag_id=tags.id) }}">
+                          <span class="badge badge-primary">
+                              {{ tags.title }}
+                          </span>
+                      </a>
                   {% endfor %}
               </div>
-          {% else %}
-              {{ form.search(class="form-control form-control-lg") }}
-          {% endif %}
-      </div>
-  </fieldset>
-  <div class="form-group">
-    {{ form.submit(class="btn btn-outline-info") }}
-    
-  </div>  
-</form>  
-
-
-<article class="media content-section">
-  
-  <div class="media-body">
-   
-    <div class="article-metadata">
-      
-      <div> <!--POur les tags-->
-        {% for genre in genres %}
-          <a href="{{url_for('posts.posts_bygenre', category=genre.title)}}"><span class="badge badge-primary">{{ genre.title }}</span></a>
-        {% endfor %} 
-        
-      </div>
-    </div>
-    
-  </div>
-</article>
-
-
-    <article class="media content-section">
-  
-        <div class="media-body">
-     
-            <div class="article-metadata">
-                <h1>{{genre.title}}</h1>    
-    
-            </div>
-      
-        </div>
-    </article>
-
-
-    {% for post in posts.items %}
-      
-        <article class="media content-section">
-          <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}">
-          <div class="media-body">
-            <div class="article-metadata">
-              <a class="mr-2" href="{{ url_for('users.user_posts', username=post.author.username) }}">{{ post.author.username }}</a>
-              <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
-              <small class="text-muted">{{ post.author.location }}</small>
-            </div>
-            <div class="article-metadata">
-              <h2><a class="article-title" href="{{ url_for('posts.post', post_id=post.id) }}">{{ post.title }}</a></h2>
-              <p class="article-content">{{ post.content[:220]|safe}} <a href="{{url_for('posts.post', post_id=post.id)}}">Read more...</a></p>
-              <div> <!--POur les tags-->
-                {% for tags in post.tags %}
-                  <span class="badge badge-primary">{{ tags.title }}</span>
-                {% endfor %}
-              </div>
-            </div>
-            
+              
           </div>
-        </article>
-    {% endfor %}
-    {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+          <!--footer of likes and comments-->
+         
+          <!---->
+      </div>
+  {% endfor %}    
+  <!-- Post /////-->
+  {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
       {% if page_num %}
-        {% if posts.page == page_num %}
-          <a class="btn btn-info mb-4" href="{{ url_for('posts.posts_bygenre', category=genre.title, page=page_num) }}">{{ page_num }}</a>
-        {% else %}
-          <a class="btn btn-outline-info mb-4" href="{{ url_for('posts.posts_bygenre', category=genre.title, page=page_num) }}">{{ page_num }}</a>
-        {% endif %}
+          {% if posts.page == page_num %}
+              <a class="btn btn-info mb-4" href="{{ url_for('main.home', page=page_num) }}">{{ page_num }}</a>
+          {% else %}
+              <a class="btn btn-outline-info mb-4" href="{{ url_for('main.home', page=page_num) }}">{{ page_num }}</a>
+          {% endif %}
       {% else %}
-        ...
+          ...
       {% endif %}
-    {% endfor %}
-  
+  {% endfor %}
+
+
+</div>
+
+<div class="col-md-4"><!--md-3-->
+  <div class="card gedf-card">
+      <div class="card-body">
+          <h5 class="card-title">Categories</h5>
+          <h6 class="card-subtitle mb-2 text-muted">Category</h6>
+          <p class="card-text">
+              {% for genre in genres -%}
+                  <a href="{{url_for('posts.posts_bygenre', category=genre.title)}}">
+                      <span class="badge badge-primary">
+                          {{ genre.title }}
+                      </span>
+                  </a>
+              {% endfor %}
+          </p>
+          
+      </div>
+  </div>
+  <div class="card gedf-card">
+          <div class="card-body">
+              <h5 class="card-title">Card title</h5>
+              <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
+                  card's content.</p>
+              <a href="#" class="card-link">Card link</a>
+              <a href="#" class="card-link">Another link</a>
+          </div>
+      </div>
+  </div>
+
+</div>
+
+
 {% endblock content %}

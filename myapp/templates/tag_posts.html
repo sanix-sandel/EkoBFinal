@@ -1,41 +1,104 @@
-{% extends "layout.html" %}
+{% extends "Layout.html" %}
 
 {% block content %}
-{% for post in posts.items %}
-<article class="media content-section">
-    <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}">
-    <div class="media-body">
-      <div class="article-metadata">
-        <a class="mr-2" href="{{ url_for('users.user_posts', username=post.author.username) }}">{{ post.author.username }}</a>
-        <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
-        <small class="text-muted">{{ post.author.location }}</small>
-      </div>
-      <div class="article-metadata">
-        <h2><a class="article-title" href="{{ url_for('posts.post', post_id=post.id) }}">{{ post.title }}</a></h2>
-        <p class="article-content">{{ post.content[:220]|safe}} <a href="{{url_for('posts.post', post_id=post.id)}}">Read more...</a></p>
-        <div> <!--POur les tags-->
-          {% for tags in post.tags %}
-            <a href="{{ url_for('posts.tag_posts', tag_id=tags.id) }}"><span class="badge badge-primary">{{ tags.title }}</span></a>
-            
-          {% endfor %}
-        </div>
-      </div>
-      
-    </div>
-  </article>
-{% endfor %}
 
-{% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
-    {% if page_num %}
-        {% if posts.page == page_num %}
-            <a class="btn btn-info mb-4" href="{{ url_for('main.home', page=page_num) }}">{{ page_num }}</a>
-        {% else %}
-            <a class="btn btn-outline-info mb-4" href="{{ url_for('main.home', page=page_num) }}">{{ page_num }}</a>
-        {% endif %}
-    {% else %}
-        ...
-    {% endif %}
-{% endfor %}
+<div class="col-md-3"><!--md-3-->
+  <div class="card">
+      <div class="card-body">
+          <div class="h5">Tags</div>
+          <div class="h7 text-muted">Tags for shortcut</div>
+          <div class="h7">
+              {% for tags in tags -%}
+                  <a href="{{ url_for('posts.tag_posts', tag_id=tags.id) }}">
+                      <span class="badge badge-primary">
+                          {{ tags.title }}
+                      </span>
+                  </a>
+              {% endfor %}
+          </div>
+          
+      </div>
+      <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+              <div class="h6 text-muted">Posts</div>
+              <div class="h5">{{posts.total}}</div>
+          </li>
+          <li class="list-group-item">
+              <div class="h6 text-muted">Doc files</div>
+              <div class="h5">6758</div>
+          </li>
+          <li class="list-group-item">Vestibulum at eros</li>
+      </ul>
+  </div>
+</div>
+<div class="col-md-7 gedf-main"><!--md-6-->
+  
+   
+  {% for post in posts.items %}
+      <div class="card gedf-card">
+          <div class="card-header">
+              <div class="d-flex justify-content-between align-items-center">
+                  <div class="d-flex justify-content-between align-items-center">
+                      <div class="mr-2">
+                          <img class="rounded-circle" width="45" src="{{url_for('static', filename='profile_pics/' + post.author.image_file)}}" >
+                      </div>
+                      <div class="ml-2">
+                          <div class="h5 m-0">{{ post.author.username }}</div>
+                          <div class="h7 text-muted">{{post.author.location}}</div>
+                      </div>
+                  </div>
+                  <div>
+                    {% if current_user == post.author %}
+                        <div class="dropdown">
+                            <button class="btn btn-link dropdown-toggle" type="button" id="gedf-drop1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-ellipsis-h"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="gedf-drop1">
+                        
+                                <a class="dropdown-item" href="{{ url_for('posts.update_post', post_id=post.id) }}">Update</a>
+                                <a class="dropdown-item" href="{{ url_for('posts.delete_post', post_id=post.id) }}">Delete</a>
+                       
+                            </div>
+                        </div>
+                    {% endif %}
+                  </div>
+              </div>
+
+          </div>
+          <div class="card-body">
+              <div class="text-muted h7 mb-2"> <i class="fa fa-clock-o"></i> {{post.date_posted.strftime('%Y-%m-%d')}}</div>
+              <a class="card-link" href="{{ url_for('posts.post', post_id=post.id) }}">
+                  <h2 class="card-title">{{post.title}} </h2>
+              </a>
+
+              <div>
+                  {% for tags in post.tags -%}
+                      <a href="{{ url_for('posts.tag_posts', tag_id=tags.id) }}">
+                          <span class="badge badge-primary">
+                              {{ tags.title }}
+                          </span>
+                      </a>
+                  {% endfor %}
+              </div>
+              
+          </div>
+          <!--footer of likes and comments-->
+         
+          <!---->
+      </div>
+  {% endfor %}    
+  <!-- Post /////-->
+  {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+      {% if page_num %}
+          {% if posts.page == page_num %}
+              <a class="btn btn-info mb-4" href="{{ url_for('main.home', page=page_num) }}">{{ page_num }}</a>
+          {% else %}
+              <a class="btn btn-outline-info mb-4" href="{{ url_for('main.home', page=page_num) }}">{{ page_num }}</a>
+          {% endif %}
+      {% else %}
+          ...
+      {% endif %}
+  {% endfor %}
 
 
 {% endblock content %}

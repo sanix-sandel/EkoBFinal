@@ -1,0 +1,54 @@
+{% extends "Layout.html" %}
+{% block content %}
+<div class="col-md-12"><!--md-3-->
+    <div class="card">
+        <div class="card-body">
+            <div class="h5">Categories</div>
+            
+            <div class="h7">
+                {% for genre in genres -%}
+                    <a href="{{url_for('files.files_bygenre', category=genre.title)}}">
+                        <span class="badge badge-primary">
+                            {{genre.title}}
+                        </span>
+                    </a>
+                {% endfor %}
+            </div>
+            
+        </div>
+      
+    </div>
+</div>
+
+
+
+<div class="col-m-12">
+    <div class="row">
+    {% for file in files.items %}
+        <div class="card" style="width: 10rem; height:14rem;">
+            <img class="card-img-top" style="height:8rem; width:10rem;" src="{{url_for('files.serve_image', img_id=file.img_id)}}" alt="Card image cap">
+            <div class="card-body">
+                <a href="{{ url_for('files.file', file_id=file.id) }}"><p class="h7 text-muted">{{file.title}}</p></a>
+                
+               
+            </div>
+           <!-- <a href="#" class="btn btn-primary"  style="width: 4rem; height:2rem;">Download</a>-->
+        </div>
+    {% endfor %}
+    </div>
+</div>        
+
+<div class="col-md-12">
+    {% for page_num in files.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+        {% if page_num %}
+            {% if files.page == page_num %}
+                <a class="btn btn-info mb-4" href="{{ url_for('files.allfiles', page=page_num) }}">{{ page_num }}</a>
+            {% else %}
+                <a class="btn btn-outline-info mb-4" href="{{ url_for('files.allfiles', page=page_num) }}">{{ page_num }}</a>
+            {% endif %}
+        {% else %}
+            ...
+        {% endif %}
+    {% endfor %}
+</div>          
+{% endblock %}

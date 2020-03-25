@@ -3,11 +3,11 @@
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}"></link>
 
     <!--<link rel="icon" type="image/png" href="static/LgBrowser.png" />-->
@@ -55,6 +55,7 @@
             <div class="navbar-nav mr-auto">
               <a title="Home" class="nav-item nav-link" href="{{ url_for('main.home') }}"><i class="fa fa-home"></i></a>
               <a title="About us" class="nav-item nav-link" href="{{ url_for('main.about') }}"><em> ? </em></a>
+             
             </div>
            
              <!-- Search panel -->
@@ -76,6 +77,10 @@
                     <a href="{{url_for('files.recommend')}}">Recommend an ebook</a>
                     <a href="{{url_for('files.ebooks')}}">Recommended ebooks</a>
                   </div>
+                </div>
+
+                <div class="dropdown">
+
                 </div>
 
                 
@@ -114,7 +119,7 @@
           {% endwith %}
           {% block content %}{% endblock %}
         </div>
-      <!--
+      
         <div class="col-md-2">
           <div class="content-section">
             <h3>Extras !</h3>
@@ -134,7 +139,7 @@
             </p>
           </div>
         </div>
-      -->  
+      
        
       </div>
     </main>
@@ -146,7 +151,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
-
+<!--
     
     <footer class="footer">
       <div class="footer-left col-md-4 col-sm-6">
@@ -158,7 +163,7 @@
           <a title="Facebook" href="https://www.facebook.com/Eko-B-111482570374929/"><i class="fa fa-facebook"></i></a>
           <a title="Twitter" href="#"><i class="fa fa-twitter"></i></a>
           <a title="Instagram" href="#"><i class="fa fa-instagram"></i></a>
-          <a  title="Vkontakte" href="https://vk.com/id466137166"><i class="fa fa-vk"></i></a>
+          <a  title="Vkontakte" href="#"><i class="fa fa-vk"></i></a>
         </div>
       </div>
       <div class="footer-center col-md-4 col-sm-6">
@@ -184,7 +189,23 @@
         <p class="name"> TechyB Inc. &copy; 2019</p>
       </div>
     </footer>  
-  
+-->
+    <footer>
+      <div class="card text-center">
+        <div class="card-header">
+          Featured
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">Special title treatment</h5>
+          <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+          <a href="#" class="btn btn-primary">Go somewhere</a>
+        </div>
+        <div class="card-footer text-muted">
+          2 days ago
+        </div>
+      </div>
+    </footer>
+
   </script>
 </body>
 </html>

@@ -1,0 +1,128 @@
+{% extends "Layout.html" %}
+{% block content %}
+    
+<div class="container bootstrap snippet">
+    <div class="row">
+  		<div class="col-sm-10"><h1>{{current_user.username}}</h1></div>
+    	
+    </div>
+    <div class="row">
+  		<div class="col-sm-3"><!--left col-->
+              
+
+      <div class="text-center">
+        <img class="rounded-circle account-img" src="{{image_file}}" >
+        
+      </div></hr><br>
+
+               
+          <div class="panel panel-default">
+            <div class="panel-heading">Website <i class="fa fa-link fa-1x"></i></div>
+            <div class="panel-body"><a href="http://bootnipets.com">bootnipets.com</a></div>
+          </div>
+          
+          
+          <ul class="list-group">
+            <li class="list-group-item text-muted">Activity <i class="fa fa-dashboard fa-1x"></i></li>
+            <li class="list-group-item text-right"><span class="pull-left"><strong>Posts</strong></span> 125</li>
+            <li class="list-group-item text-right"><span class="pull-left"><strong>Ebooks added</strong></span> {{current_user.books}}</li>
+            <li class="list-group-item text-right"><span class="pull-left"><strong>Posts</strong></span> 37</li>
+            <li class="list-group-item text-right"><span class="pull-left"><strong>Followers</strong></span> 78</li>
+          </ul> 
+               
+          
+        </div><!--/col-3-->
+    	<div class="col-sm-9">
+              
+          <div class="tab-content">
+            <div class="tab-pane active" id="home">
+                
+                <form class="form" action="##" method="POST" enctype="multipart/form-data" id="registrationForm">
+                    {{ form.hidden_tag() }}
+                    <fieldset class="form-group">
+                        <div class="form-group">
+                          
+                            <div class="col-xs-6">
+                                {{ form.username.label(class="form-control-label") }}
+
+                                {% if form.username.errors %}
+                                    {{ form.username(class="form-control form-control-lg is-invalid") }}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.username.errors %}
+                                            <span>{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ form.username(class="form-control form-control-lg") }}
+                                {% endif %}
+                            </div>
+                        </div>
+                    
+                     
+                        <div class="form-group">
+                            <div class="col-xs-6">
+                                {{ form.email.label(class="form-control-label") }}
+
+                                {% if form.email.errors %}
+                                    {{ form.email(class="form-control form-control-lg is-invalid") }}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.email.errors %}
+                                            <span>{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ form.email(class="form-control form-control-lg") }}
+                                {% endif %}
+                            </div>
+                            
+                        </div>
+          
+                      
+                        <div class="form-group">
+                            <div class="col-xs-6">
+                                {{ form.location.label(class="form-control-label") }}
+
+                                {% if form.location.errors %}
+                                    {{ form.location(class="form-control form-control-lg is-invalid") }}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.location.errors %}
+                                            <span>{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ form.location(class="form-control form-control-lg") }}
+                                {% endif %}
+                            </div>
+                           
+                        </div>
+                      
+                        <div class="form-group">
+                            <div class="col-xs-6">
+                                {{ form.picture.label() }}
+                                {{ form.picture(class="form-control-file") }}
+                                {% if form.picture.errors %}
+                                    {% for error in form.picture.errors %}
+                                        <span class="text-danger">{{ error }}</span></br>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                           
+                        </div>
+                      
+                        <div class="form-group">
+                            <div class="col-xs-12">
+                                <br>
+                              	{{ form.submit(class="btn btn-outline-info") }}
+                               	
+                            </div>
+                        </div>
+                    </fieldset> 
+              	</form>
+              
+                </div><!--/tab-pane-->
+             <div class="tab-pane" id="messages">
+            </div>  
+        </div>                             
+    </div>
+</div>    
+{% endblock %}
