@@ -5,20 +5,19 @@ from myapp.factory import db, mail
 from myapp.models import File, Ebook, Cover, User, Notif, Genre
 from myapp.files.forms import FileForm, EbookForm, SearchForm
 from myapp.users.utils import save_picture, send_reset_email, send_mail, msg_to_dict
-import bleach
-from io import BytesIO
 from flask import Markup
 from flask_mail import Message
 from sqlalchemy.orm.util import join
 from datetime import datetime
 import os
-
+import secrets
+from werkzeug.utils import secure_filename
 
 
 files=Blueprint('files', __name__)
 
 
-ALLOWED_EXTENSIONS=set(['pdf', 'epub'])
+ALLOWED_EXTENSIONS=set(['pdf', 'epub', 'txt'])
 EXTENSIONS_ALLOWED=set(['jpeg', 'png', 'jpg'])
 
 def allowed_file(filename):
@@ -45,63 +44,124 @@ def serve_image(img_id):
 
 
 
+
+def sav_picture(form_picture):
+    random_hex=secrets.token_hex(8)#we gave the image file a randomized name
+    _, f_ext=os.path.splitext(form_picture.filename)
+    picture_fn=random_hex + f_ext
+    picture_path=os.path.join(current_app.root_path, 'static/pdf_files', picture_fn)
+
+    
+    form_picture.save(picture_path)
+
+    return picture_fn
+
+
+def save_file(pdf_file):
+    file_fn=secure_filename(pdf_file.filename)
+    file_path=os.path.join(current_app.root_path, 'static/pdf_files', file_fn)
+    pdf_file.save(file_path)
+    return file_fn
+
+
+
 @login_required
 @files.route('/home/upload', methods=['GET', 'POST'])
 def upload():
-    form=FileForm()      
+    form=FileForm()
+    if request.method=='POST':
+        fichier=request.files['file']
+        cover=request.files['cover']
+        if 'file' not in request.files:
+            flash('No file part !')
+        
+        elif fichier.filename=='':
+            flash('No file selected ', 'danger')
+            return redirect(request.url)  
+
+        elif not (allowed_file(fichier.filename) or file_allowed(cover.filename)):
+            flash('Only PDF files, please for files', 'danger')
+            flash('And Only png, jpeg, jpg files allowed for cover image', 'danger')
+           
+         
     #if form.is_submitted():
-    if not current_user.is_authenticated:
-        flash('Reister or Login first', 'danger')
-        return redirect(url_for('users.login'))    
-    if form.validate_on_submit():
-        flash('Your file has been successfully uploaded !', 'succes')        
-        form.filedata.data.seek(0, os.SEEK_END)
-        file_length=form.filedata.data.tell()/1000000
-        file_length=str(file_length)[:4]
-        category=form.genre.data
-        newFile=File(title=form.title.data.title(), data=form.filedata.data.read(), 
-            description=form.description.data, uploader=current_user, downloaded=0,
-            file_size=file_length, category=category.title, auteur=form.auteur.data)
-        cover=Cover(file=newFile, data=form.cover.data.read())
-        flash('Your file has been successfully uploaded', 'success')
-        db.session.add(cover)            
-        db.session.commit()  
-        newFile.img_id=cover.id
-        db.session.add(newFile)
-        db.session.commit()
-              
+        else:
+            try:
+
+                flash('Your file has been successfully uploaded !', 'succes')
+            
+                category=form.genre.data
+                data=sav_picture(fichier)
+                fichier.seek(0, os.SEEK_END)
+                file_length=fichier.tell()/1000000
+                file_length=str(file_length)[:4]
+
+                newfile=File(title=form.title.data.title(), data=data, description=form.description.data, uploader=current_user, downloaded=0, file_size=file_length, category=category.title, auteur=form.auteur.data)
+                cover=Cover(file=newfile, data=cover.read())
+                db.session.commit()
+                newfile.img_id=cover.id
+                db.session.add(cover)  
+                db.session.add(newfile)
+                db.session.commit()
+                return redirect(url_for('files.allfiles'))
+            except:
+                flash("We're accounting a technical problem right now, try later please", 'danger')    
+                return redirect(url_for('files.allfiles'))
     return render_template("File_upload.html", form=form)
 
 
 
 @login_required
-@files.route('/home/upload/<int:recommender_id>/<int:ebook_id>', methods=['GET', 'POST'])
-def uploadv(recommender_id, ebook_id):
+@files.route('/home/upload/<int:recommender_id>', methods=['GET', 'POST'])
+def uploadv(recommender_id):
     form=FileForm()
     recommender=User.query.filter_by(id=recommender_id).first()
-    ebook=Ebook.query.filter_by(id=ebook_id).first()
-    flash('Keep making the library grow for the sake of all', 'success')
-    if form.validate_on_submit():
-               
-        form.filedata.data.seek(0, os.SEEK_END)
-        file_length=form.filedata.data.tell()/1000000
-        file_length=str(file_length)[:4]
-        category=form.genre.data
-        newFile=File(title=ebook.title.title(), data=form.filedata.data.read(), 
-            description=form.description.data, uploader=current_user, downloaded=0,
-            file_size=file_length, category=category.title, auteur=form.auteur.data)
-        cover=Cover(file=newFile, data=form.cover.data.read())
-        flash('Your file has been successfully uploaded. Thank you very much !', 'success')
-        db.session.add(cover)            
-        db.session.commit()  
-        newFile.img_id=cover.id
-        db.session.add(newFile)
-        db.session.commit()
-    
-        send_mail(recommender.email,'Recommended Ebook uploaded', 'ebookuploaded', username=recommender.username, title=newFile.title)
-        return redirect(url_for('files.allfiles')) 
+    if request.method=='POST':
+        fichier=request.files['file']
+        cover=request.files['cover']
+        if 'file' not in request.files:
+            flash('No file part !')
+        
+        elif fichier.filename=='':
+            flash('No file selected ', 'danger')
+            return redirect(request.url)  
+
+        elif not (allowed_file(fichier.filename) or file_allowed(cover.filename)):
+            flash('Only PDF files, please for files', 'danger')
+            flash('And Only png, jpeg, jpg files allowed for cover image', 'danger')
+    #if form.is_submitted():
+        else:
+            
+            flash('Your file has been successfully uploaded !', 'succes')
+            flash('thank You very much, Keep helping the biblio grow', 'succes')
+            
+            category=form.genre.data
+            data=sav_picture(fichier)
+            fichier.seek(0, os.SEEK_END)
+            file_length=fichier.tell()/1000000
+            file_length=str(file_length)[:4]
+            
+            newfile=File(title=form.title.data.title(), data=data, description=form.description.data, uploader=current_user, downloaded=0, file_size=file_length, category=category.title, auteur=form.auteur.data)
+            cover=Cover(file=newfile, data=cover.read())
+            db.session.commit()
+            newfile.img_id=cover.id
+            db.session.add(cover)  
+            db.session.add(newfile)
+            db.session.commit()
+            msg = Message('E-Books Recommendation',
+                  sender='techyintelo@gmail.com',
+                  recipients=[recommender.email])
+            msg.body = f'''Woopi ! the ebook you needed has been uploaded by a volunteer ! You can check it out 
+            If you did not make this request then simply ignore this email and no changes will be made.
+            TechyB Team.
+                '''
+           
+            mail.send(msg)
+
               
-    return render_template("File_upload2.html", form=form, title=ebook.title.capitalize())
+    return render_template("File_upload2.html", form=form)
+
+
 
 
 @login_required
@@ -109,7 +169,7 @@ def uploadv(recommender_id, ebook_id):
 def file(file_id):
     
     file = File.query.get_or_404(file_id)
-    return render_template('file.html', title=file.title, file=file, file_id=file_id, cover=file.cover, file_size=file.file_size, img_id=file.img_id)
+    return render_template('file.html', title=file.title, file=file, cover=file.cover, file_size=file.file_size, img_id=file.img_id)
 
 @login_required
 @files.route('/file/<int:file_id>/download', methods=['POST', 'GET'])
@@ -117,9 +177,14 @@ def download(file_id):
     file_data=File.query.get_or_404(file_id)
     file_data.downloads()
     db.session.commit()
-    return send_file(BytesIO(file_data.data), attachment_filename=file_data.title, as_attachment=True) 
-
-
+    try:
+        file_path=  os.path.join(current_app.root_path, 'static/pdf_files', file_data.data)
+        return send_file(file_path, attachment_filename=file_data.title+"."+file_data.data.split(".")[-1], as_attachment=True) 
+    except:
+        flash('Sorry, The file has been removed', 'danger')
+        return redirect(url_for('files.allfiles'))
+    
+    
 
 @login_required
 @files.route("/home/recommend", methods=['GET', 'POST'])

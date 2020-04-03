@@ -31,7 +31,7 @@
             <div class="tab-pane active" id="home">
                 
               <p class="article-content">{{ file.description | safe }}</p>
-              <a href="#" class="btn btn-primary fa fa-download"  style="width: 8rem; height:3rem;">
+              <a href="{{url_for('files.download', file_id=file.id)}}" class="btn btn-primary fa fa-download"  style="width: 8rem; height:3rem;">
                 Download {{ file_size }} MB 
               </a>
                 {{ share.create(title='Share via: ') }}  

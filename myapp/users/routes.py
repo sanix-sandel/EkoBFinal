@@ -70,6 +70,7 @@ def account():
         current_user.username = form.username.data
         current_user.email = form.email.data
         current_user.location=form.location.data      #Ici
+       
         db.session.commit()
         flash('Your account has been updated!', 'success')
         return redirect(url_for('main.home'))
@@ -77,9 +78,10 @@ def account():
         form.username.data = current_user.username
         form.email.data = current_user.email
         form.location.data=current_user.location #ici
+        posts=Post.query.all()
     image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
     return render_template('Account.html', title='Account',
-                           image_file=image_file, form=form)
+                           image_file=image_file, form=form, posts=posts)
 
 
     

@@ -127,7 +127,6 @@ class User(db.Model, UserMixin):
 tags=db.Table('post_tags',
     db.Column('post_id', db.Integer, db.ForeignKey('post.id'), nullable=True),
     db.Column('tag_id', db.Integer, db.ForeignKey('tag.id'), nullable=True)
-
 )
 
 
@@ -147,7 +146,6 @@ class Post(db.Model):
     liked=db.relationship('PostLike', backref='post_liked', lazy='dynamic', cascade='all, delete-orphan')
     nbrlikes=db.Column(db.Integer, default=0, nullable=False)
 
-   
     extend_existing=True
 
     @property
@@ -158,7 +156,6 @@ class Post(db.Model):
     def read(self, r):
         self.reads=r
         
-
     @property
     def like(self):
         return self.nbrlikes
@@ -224,11 +221,10 @@ class Reply(db.Model):
 class File(db.Model):
     __searchable__= ['title']
    
-
     id=db.Column(db.Integer, primary_key=True)
     title=db.Column(db.String(150), nullable=False)   
     date_posted=db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    data=db.Column(db.LargeBinary, nullable=False) 
+    data=db.Column(db.String(220), nullable=False)
     user_id=db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
     description=db.Column(db.String(500), nullable=False)
     category=db.Column(db.String(20), nullable=False)

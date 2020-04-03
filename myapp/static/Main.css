@@ -176,6 +176,9 @@ footer p { font-size:13px; color:#CCC; padding-bottom:0px; margin-bottom:8px;}
     color:black !important;
 }
 
+.card-img-top:hover{
+    opacity:0.7;
+}
 /*For docs*/
 
 .drive-wrapper {

@@ -26,7 +26,7 @@
                     </li>
                     <li class="list-group-item">
                         <div class="h6 text-muted">Doc files</div>
-                        <div class="h5">6758</div>
+                        <div class="h5">{{files}}</div>
                     </li>
                     <a href="{{url_for('main.trend')}}"><li class="list-group-item">Trending posts</li></a>
                 </ul>
@@ -139,9 +139,7 @@
                         </div>
                         
                     </div>
-                    <!--footer of likes and comments-->
-                   
-                    <!---->
+                    
                 </div>
             {% endfor %}    
             <!-- Post /////-->
@@ -165,7 +163,7 @@
             <div class="card gedf-card">
                 <div class="card-body">
                     <h5 class="card-title">Categories</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">Category</h6>
+                    
                     <p class="card-text">
                         {% for genre in genres -%}
                             <a href="{{url_for('posts.posts_bygenre', category=genre.title)}}">
@@ -180,12 +178,11 @@
             </div>
             <div class="card gedf-card">
                 <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
-                            card's content.</p>
-                    <a href="#" class="card-link">Card link</a>
-                    <a href="#" class="card-link">Another link</a>
+                    <h5 class="card-title"></h5>
+                    <h6 class="card-subtitle mb-2 text-muted"></h6>
+                    <p class="card-text"></p>
+                    <a href="#" class="card-link"></a>
+                    <a href="#" class="card-link"></a>
                 </div>
             </div>
         </div>

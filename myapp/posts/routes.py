@@ -5,7 +5,7 @@ from myapp.factory import db
 from myapp.models import Post, Comment, Tag, Reply, Genre, Notif
 from myapp.posts.forms import PostForm, TagForm
 from myapp.comments.forms import CommentForm
-import bleach
+
 from flask import Markup
 from flask import send_from_directory
 from myapp.files.forms import SearchForm

@@ -26,7 +26,10 @@
     <div class="row">
     {% for file in files.items %}
         <div class="card" style="width: 10rem; height:14rem;">
-            <img class="card-img-top" style="height:8rem; width:10rem;" src="{{url_for('files.serve_image', img_id=file.img_id)}}" alt="Card image cap">
+            <a href="{{ url_for('files.file', file_id=file.id) }}">
+                <img class="card-img-top" style="height:8rem; width:10rem;" src="{{url_for('files.serve_image', img_id=file.img_id)}}" alt="Card image cap">
+            </a>
+            
             <div class="card-body">
                 <a href="{{ url_for('files.file', file_id=file.id) }}"><p class="h7 text-muted">{{file.title}}</p></a>
                 

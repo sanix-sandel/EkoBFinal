@@ -17,7 +17,7 @@ class Config:
     CELERY_ACCEPT_CONTENT = ['pickle', 'json', 'msgpack', 'yaml']
     CELERY_BROKER_URL='amqp://localhost//'
     CELERY_RESULT_BACKEND='amqp://localhost//'
-   
+    UPLOAD_FOLDER='myapp/static/pdf_files'
 
 #ici
 class ProductionConfig(Config):
